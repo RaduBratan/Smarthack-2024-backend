@@ -111,10 +111,18 @@ public class SessionServiceImpl implements SessionService {
 		var movementsPenalties = networkService.registerMovements(evaluationSession, movements);
 		List<Demand> demands = dailyDemands.get(day);
 		var allPenalties = networkService.updateNetworkAndKpis(evaluationSession, movementsPenalties, evaluationTrack);
-		evaluationSession.setCurrentDay(day + 1);
-		if (evaluationSession.getCurrentDay() > numberOfDays) {
+		var nextDay = day + 1;
+
+		if (nextDay > numberOfDays) {
 			evaluationSession.setEndTime(LocalDateTime.now());
-			allPenalties.addAll(endOfGame(evaluationSession, 1.0));
+			Collection<Penalty> endOfGamePenalties = endOfGame(evaluationSession, 50.0);
+			var endOfGamePenaltyCost = endOfGamePenalties.stream().mapToDouble(Penalty::getCost).sum();
+			var endOfGamePenaltyCo2 = endOfGamePenalties.stream().mapToDouble(Penalty::getCo2).sum();
+			evaluationTrack.setPenaltyCost(evaluationTrack.getPenaltyCost() + endOfGamePenaltyCost);
+			evaluationTrack.setPenaltyCo2(evaluationTrack.getPenaltyCo2() + endOfGamePenaltyCo2);
+			allPenalties.addAll(endOfGamePenalties);
+		} else {
+			evaluationSession.setCurrentDay(nextDay);
 		}
 		if (!allPenalties.isEmpty()) {
 			penaltiesRepository.saveAll(allPenalties);
@@ -142,7 +150,7 @@ public class SessionServiceImpl implements SessionService {
 		var evaluationSession = sessionRepository.findByApiKey(apiKey)
 				.orElseThrow(() -> new SessionNotFoundException());
 		evaluationSession.setEndTime(LocalDateTime.now());
-		var penalties = endOfGame(evaluationSession, 7.0 * numberOfDays / evaluationSession.getCurrentDay());
+		var penalties = endOfGame(evaluationSession, 700.0 * numberOfDays / evaluationSession.getCurrentDay());
 		sessionRepository.save(evaluationSession);
 		return new DayResponseDto(evaluationSession.getCurrentDay(), null,
 				penalties.stream()
@@ -155,7 +163,7 @@ public class SessionServiceImpl implements SessionService {
 	}
 
 	public Collection<Penalty> endOfGame(EvaluationSession evaluationSession, double factor) {
-		return networkService.endOfGame(evaluationSession, factor);
+		return networkService.endOfGame(evaluationSession, factor, numberOfDays);
 
 	}
 

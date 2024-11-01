@@ -279,12 +279,24 @@ At the end of the session, the following additional penalties are calculated:
  
 - One penalty of type ```UNMET_DEMANDS``` will be generated for all unmet demands. It is calculated as 
 ```math
-\sum{}(amount_{remaining} * (day_{endDelivery} - day_{current}) * c_{lateDelivery}) * 3 
+c_{multiplier} * \sum{}(amount_{remaining} * referenceDays * c_{lateDelivery}) * 10 
+```
+
+```math
+referenceDays = \begin{cases}
+	numberOfDays - day_{startDelivery} \text{, when the delivery was not fulfilled at all} \\
+	numberOfDays - day_{endDelivery} \text{, when the delivery was partially fulfilled}
+\end{cases}
 ```
 
 When the session is manually ended, then the end of session penalties are multiplied by a factor of 
 ```math 
-7 * \frac{numberOfDays}{day_{current}} 
+c_{multiplier} = 700 * \frac{numberOfDays}{day_{current}} 
+```
+
+When the session is automatically finished, the multiplier is
+```math
+c_{multiplier} = 50
 ```
 
 ## The evaluation application

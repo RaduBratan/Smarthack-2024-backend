@@ -20,6 +20,8 @@ public interface NetworkService {
 
 	NodeStatus getNoteStatusForNode(EvaluationSession evaluationSession, Node node);
 
-	Collection<Penalty> endOfGame(EvaluationSession evaluationSession, double factor);
+	Collection<Penalty> endOfGame(EvaluationSession evaluationSession, double factor, int numberOfDays);
+
+	
 
 }

@@ -418,7 +418,7 @@ public class NetworkServiceImpl implements NetworkService {
 	}
 
 	@Override
-	public Collection<Penalty> endOfGame(EvaluationSession evaluationSession, double factor) {
+	public Collection<Penalty> endOfGame(EvaluationSession evaluationSession, double factor, int numberOfDays) {
 		Collection<Penalty> penalties = new LinkedList<>();
 		var day = evaluationSession.getCurrentDay();
 		var pendingMovements = movementRepository.findBySessionIdAndInTransit(evaluationSession.getId(), day);
@@ -448,7 +448,7 @@ public class NetworkServiceImpl implements NetworkService {
 
 		var unmetDemandBase = unmetDemands.stream()
 				.collect(Collectors.summingDouble(d -> d.getRemainingQuantity()
-						* (d.getDemand().getEndDeliveryDay() - day) * 3
+						* (unmetDemandDays(d, day, numberOfDays)) * 10
 						* ((Customer) d.getCustomerNodeStatus().getNode()).getLateDeliveryPenaltyCoefficient()));
 		if (unmetDemandBase > 0) {
 			var penalty = new Penalty();
@@ -470,6 +470,13 @@ public class NetworkServiceImpl implements NetworkService {
 	@PostConstruct
 	void init() {
 		connections = connectionRepository.findAll().stream().collect(Collectors.toMap(Connection::getId, c -> c));
+	}
+
+	private int unmetDemandDays(DemandStatus ds, int currentDay, int numDays) {
+		if (ds.getDemand().getQuantity() == ds.getRemainingQuantity()) {
+			return (numDays - ds.getDemand().getStartDeliveryDay())*10;
+		}
+		return numDays - ds.getDemand().getEndDeliveryDay();
 	}
 
 }
