@@ -410,4 +410,4 @@ The exposed APIs are documented as OpenAPI stardard specifications. Once the app
 
 - JSON formatted OpenAPI specification: [http://locahost:4251/api-docs](http://localhost:4251/api-docs)
 - YAML formatted OpenAPI specifications (downloadable): [http://localhost:4251/api-docs.yaml](http://localhost:4251/api-docs.yaml)
-- Swagger UI: [http://localhost:4251/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- Swagger UI: [http://localhost:4251/swagger-ui.html](http://localhost:4251/swagger-ui.html)
