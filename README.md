@@ -395,7 +395,7 @@ It can only work from the root of the project (``/eval-platform``). Make sure th
 
 By default, the application is listening to port ``8080``, so its base URL is [http://localhost:8080](http://localhost:8080).
 
-The exposed APIs are available at the full path ``http://locahohst:8080/api/v1/``.
+The exposed APIs are available at the full path ``http://locahohst:4251/api/v1/``.
 
 > Because there is no GET endpoint exposed and all the endpoints require an ``API-KEY`` header, you will get an error page when you try to access any URL using a browser. Try using a Rest client, such as [Bruno](https://www.usebruno.com/). You can find some Bruno examples in this repository.
 
@@ -408,6 +408,6 @@ server.port=<your port>
 
 The exposed APIs are documented as OpenAPI stardard specifications. Once the application is started, the specifications are available as following:
 
-- JSON formatted OpenAPI specification: [http://locahost:8080/api-docs](http://localhost:8080/api-docs)
-- YAML formatted OpenAPI specifications (downloadable): [http://localhost:8080/api-docs.yaml](http://localhost:8080/api-docs.yaml)
-- Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- JSON formatted OpenAPI specification: [http://locahost:4251/api-docs](http://localhost:4251/api-docs)
+- YAML formatted OpenAPI specifications (downloadable): [http://localhost:4251/api-docs.yaml](http://localhost:4251/api-docs.yaml)
+- Swagger UI: [http://localhost:4251/swagger-ui.html](http://localhost:8080/swagger-ui.html)
